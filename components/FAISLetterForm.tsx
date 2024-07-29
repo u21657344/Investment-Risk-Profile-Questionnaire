@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import SignatureCanvas from 'react-signature-canvas';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -19,15 +19,30 @@ const FAISLetterForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => {
     validationSchema: Yup.object({
       fullName: Yup.string().required("Full name is required"),
       idNumber: Yup.string().required("ID number is required"),
-      signature1: Yup.string().test("signature1", "Signature 1 is required", function () {
-        return sigCanvas1.current && !sigCanvas1.current.isEmpty();
-      }),
-      signature2: Yup.string().test("signature2", "Signature 2 is required", function () {
-        return sigCanvas2.current && !sigCanvas2.current.isEmpty();
-      }),
-      signature3: Yup.string().test("signature3", "Signature 3 is required", function () {
-        return sigCanvas3.current && !sigCanvas3.current.isEmpty();
-      }),
+      signature1: Yup.string().test(
+        "signature1",
+        "Signature 1 is required",
+        function () {
+          const isSignatureEmpty = sigCanvas1.current?.isEmpty();
+          return !isSignatureEmpty || this.createError({ message: "Signature 1 is required" });
+        }
+      ),
+      signature2: Yup.string().test(
+        "signature2",
+        "Signature 2 is required",
+        function () {
+          const isSignatureEmpty = sigCanvas2.current?.isEmpty();
+          return !isSignatureEmpty || this.createError({ message: "Signature 2 is required" });
+        }
+      ),
+      signature3: Yup.string().test(
+        "signature3",
+        "Signature 3 is required",
+        function () {
+          const isSignatureEmpty = sigCanvas3.current?.isEmpty();
+          return !isSignatureEmpty || this.createError({ message: "Signature 3 is required" });
+        }
+      ),
     }),
     onSubmit: (values) => {
       const signature1 = sigCanvas1.current?.getTrimmedCanvas().toDataURL("image/png");
