@@ -3,8 +3,8 @@ import SignatureCanvas from "react-signature-canvas";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-// Define a type for form data
-type FormData = {
+// Define your custom FormData type
+export type RiskProfileFormData = {
   preparedFor: string;
   identityNumber: string;
   preparedBy: string;
@@ -20,12 +20,12 @@ type FormData = {
   date: string;
 };
 
-type FormFieldKey = keyof FormData;
+type FormFieldKey = keyof RiskProfileFormData;
 
 const RiskProfileForm = ({
   onSubmit,
 }: {
-  onSubmit: (data: FormData) => void;
+  onSubmit: (data: RiskProfileFormData) => void;
 }) => {
   const [derivedProfileDescription, setDerivedProfileDescription] = useState<
     string | null
@@ -65,7 +65,7 @@ const RiskProfileForm = ({
     },
   ];
 
-  const formik = useFormik({
+  const formik = useFormik<RiskProfileFormData>({
     initialValues: {
       preparedFor: "",
       identityNumber: "",
@@ -133,7 +133,7 @@ const RiskProfileForm = ({
     },
   });
 
-  const calculateTotalScore = (data: FormData) => {
+  const calculateTotalScore = (data: RiskProfileFormData) => {
     let score = 0;
     switch (data.investmentTerm) {
       case "a":
@@ -216,7 +216,7 @@ const RiskProfileForm = ({
       <div className="text-center mb-4 text-gray-700">
         <p>
           The purpose of this questionnaire is to help the Financial Adviser and
-          Client determine the clients investment risk profile to guide them in
+          Client determine the client's investment risk profile to guide them in
           the selection of suitable investment solutions.
         </p>
       </div>
@@ -234,13 +234,7 @@ const RiskProfileForm = ({
             <input
               type={field.type}
               name={field.name}
-              value={
-                formik.values[field.name as FormFieldKey] as
-                  | string
-                  | number
-                  | readonly string[]
-                  | undefined
-              } // Explicitly cast to string | number | readonly string[] | undefined
+              value={formik.values[field.name as FormFieldKey] as string} // Explicitly cast to string
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               className={`p-2 rounded-md bg-gray-100 text-gray-800 ${
@@ -259,111 +253,90 @@ const RiskProfileForm = ({
           </label>
         ))}
 
+        <label className="flex flex-col text-gray-800 mb-2">
+          <span className="mb-1">Investment Term</span>
+          <select
+            name="investmentTerm"
+            value={formik.values.investmentTerm}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className={`p-2 rounded-md bg-gray-100 text-gray-800 ${
+              formik.touched.investmentTerm && formik.errors.investmentTerm
+                ? "border border-red-500"
+                : ""
+            }`}
+          >
+            <option value="">Select</option>
+            <option value="a">Short-term (1-3 years)</option>
+            <option value="b">Medium-term (3-5 years)</option>
+            <option value="c">Long-term (5-10 years)</option>
+            <option value="d">Very Long-term (10+ years)</option>
+            <option value="e">Other</option>
+          </select>
+          {formik.touched.investmentTerm && formik.errors.investmentTerm ? (
+            <div className="text-red-500 text-sm mt-1">
+              {formik.errors.investmentTerm}
+            </div>
+          ) : null}
+        </label>
+
         {[
-          {
-            label: "Investment Term",
-            name: "investmentTerm",
-            options: [
-              { label: "Select", value: "" },
-              { label: "0 - 2 years", value: "a" },
-              { label: "2 - 3 years", value: "b" },
-              { label: "3 - 5 years", value: "c" },
-              { label: "5 - 7 years", value: "d" },
-              { label: "7 - 10 years", value: "e" },
-            ],
-          },
-          {
-            label: "Required Risk",
-            name: "requiredRisk",
-            options: [
-              { label: "Select", value: "" },
-              { label: "Very Low", value: "a" },
-              { label: "Low", value: "b" },
-              { label: "Medium", value: "c" },
-            ],
-          },
-          {
-            label: "Risk Tolerance",
-            name: "riskTolerance",
-            options: [
-              { label: "Select", value: "" },
-              { label: "Low", value: "a" },
-              { label: "Moderate", value: "b" },
-              { label: "High", value: "c" },
-            ],
-          },
-          {
-            label: "Risk Capacity",
-            name: "riskCapacity",
-            options: [
-              { label: "Select", value: "" },
-              { label: "Low", value: "a" },
-              { label: "Moderate", value: "b" },
-              { label: "High", value: "c" },
-            ],
-          },
-        ].map((select) => (
-          <label key={select.name} className="flex flex-col text-gray-800 mb-2">
-            <span className="mb-1">{select.label}</span>
+          { label: "Required Risk", name: "requiredRisk" },
+          { label: "Risk Tolerance", name: "riskTolerance" },
+          { label: "Risk Capacity", name: "riskCapacity" },
+        ].map((field) => (
+          <label key={field.name} className="flex flex-col text-gray-800 mb-2">
+            <span className="mb-1">{field.label}</span>
             <select
-              name={select.name}
-              value={
-                formik.values[select.name as FormFieldKey] as
-                  | string
-                  | number
-                  | readonly string[]
-                  | undefined
-              } // Explicitly cast to string | number | readonly string[] | undefined
+              name={field.name}
+              value={formik.values[field.name as FormFieldKey] as string} // Explicitly cast to string
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               className={`p-2 rounded-md bg-gray-100 text-gray-800 ${
-                formik.touched[select.name as FormFieldKey] &&
-                formik.errors[select.name as FormFieldKey]
+                formik.touched[field.name as FormFieldKey] &&
+                formik.errors[field.name as FormFieldKey]
                   ? "border border-red-500"
                   : ""
               }`}
             >
-              {select.options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
+              <option value="">Select</option>
+              <option value="a">Low</option>
+              <option value="b">Medium</option>
+              <option value="c">High</option>
             </select>
-            {formik.touched[select.name as FormFieldKey] &&
-            formik.errors[select.name as FormFieldKey] ? (
+            {formik.touched[field.name as FormFieldKey] &&
+            formik.errors[field.name as FormFieldKey] ? (
               <div className="text-red-500 text-sm mt-1">
-                {formik.errors[select.name as FormFieldKey]}
+                {formik.errors[field.name as FormFieldKey]}
               </div>
             ) : null}
           </label>
         ))}
 
-        <label className="flex items-center text-gray-800 mb-2">
+        <label className="flex items-center text-gray-800 mb-4">
           <input
             type="checkbox"
             name="agree"
             checked={formik.values.agree}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="mr-2"
+            className={`mr-2 ${
+              formik.touched.agree && formik.errors.agree
+                ? "border border-red-500"
+                : ""
+            }`}
           />
-          <span>
-            I confirm that the Financial Adviser explained the risk categories
-            to me
-          </span>
+          I agree to the terms
         </label>
-        {formik.touched.agree && formik.errors.agree ? (
-          <div className="text-red-500 text-sm mt-1">{formik.errors.agree}</div>
-        ) : null}
 
-        <div className="text-gray-800 mb-2">
-          <span className="block mb-1">Signature</span>
+        <label className="flex flex-col text-gray-800 mb-4">
+          <span className="mb-1">Signature</span>
           <SignatureCanvas
             ref={sigCanvasRef}
             penColor="black"
             canvasProps={{
-              width: 720,
-              height: 200,
+              width: 400, // Adjust the width as needed
+              height: 100, // Adjust the height as needed
               className: "bg-white border border-gray-300 rounded-md",
             }}
           />
@@ -372,32 +345,20 @@ const RiskProfileForm = ({
               {formik.errors.signature}
             </div>
           ) : null}
-        </div>
+        </label>
 
-        {/* Buttons */}
         <button
           type="submit"
-          className="p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
+          className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
         >
           Submit
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            sigCanvasRef.current?.clear();
-            formik.resetForm();
-          }}
-          className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 mt-2"
-        >
-          Clear
         </button>
       </div>
 
       {derivedProfileDescription && (
-        <div className="bg-gray-100 p-4 mt-4 rounded-md text-gray-800">
-          <h3 className="text-lg font-semibold mb-2">
-            Derived Risk Profile Description
+        <div className="mt-6 p-4 bg-gray-100 border border-gray-300 rounded-md">
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            Risk Profile Description
           </h3>
           <p>{derivedProfileDescription}</p>
         </div>
