@@ -20,6 +20,8 @@ type FormData = {
   date: string;
 };
 
+type FormFieldKey = keyof FormData;
+
 const RiskProfileForm = ({
   onSubmit,
 }: {
@@ -214,9 +216,11 @@ const RiskProfileForm = ({
 
       <div className="text-center mb-4 text-gray-700">
         <p>
-          The purpose of this questionnaire is to help the Financial Adviser and
-          Client determine the client&#39;s investment risk profile to guide
-          them in the selection of suitable investment solutions.
+          <p>
+            The purpose of this questionnaire is to help the Financial Adviser
+            and Client determine the client&#39;s investment risk profile to
+            guide them in the selection of suitable investment solutions.
+          </p>
         </p>
       </div>
 
@@ -233,18 +237,25 @@ const RiskProfileForm = ({
             <input
               type={field.type}
               name={field.name}
-              value={formik.values[field.name]}
+              value={
+                formik.values[field.name as FormFieldKey] as
+                  | string
+                  | number
+                  | undefined
+              } // Explicitly cast to string | number | undefined
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               className={`p-2 rounded-md bg-gray-100 text-gray-800 ${
-                formik.touched[field.name] && formik.errors[field.name]
+                formik.touched[field.name as FormFieldKey] &&
+                formik.errors[field.name as FormFieldKey]
                   ? "border border-red-500"
                   : ""
               }`}
             />
-            {formik.touched[field.name] && formik.errors[field.name] ? (
+            {formik.touched[field.name as FormFieldKey] &&
+            formik.errors[field.name as FormFieldKey] ? (
               <div className="text-red-500 text-sm mt-1">
-                {formik.errors[field.name]}
+                {formik.errors[field.name as FormFieldKey]}
               </div>
             ) : null}
           </label>
@@ -298,11 +309,17 @@ const RiskProfileForm = ({
             <span className="mb-1">{select.label}</span>
             <select
               name={select.name}
-              value={formik.values[select.name]}
+              value={
+                formik.values[select.name as FormFieldKey] as
+                  | string
+                  | number
+                  | undefined
+              } // Explicitly cast to string | number | undefined
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               className={`p-2 rounded-md bg-gray-100 text-gray-800 ${
-                formik.touched[select.name] && formik.errors[select.name]
+                formik.touched[select.name as FormFieldKey] &&
+                formik.errors[select.name as FormFieldKey]
                   ? "border border-red-500"
                   : ""
               }`}
@@ -313,9 +330,10 @@ const RiskProfileForm = ({
                 </option>
               ))}
             </select>
-            {formik.touched[select.name] && formik.errors[select.name] ? (
+            {formik.touched[select.name as FormFieldKey] &&
+            formik.errors[select.name as FormFieldKey] ? (
               <div className="text-red-500 text-sm mt-1">
-                {formik.errors[select.name]}
+                {formik.errors[select.name as FormFieldKey]}
               </div>
             ) : null}
           </label>
