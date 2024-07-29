@@ -27,9 +27,7 @@ const RiskProfileForm = ({
 }: {
   onSubmit: (data: FormData) => void;
 }) => {
-  const [derivedProfileDescription, setDerivedProfileDescription] = useState<
-    string | null
-  >(null);
+  const [derivedProfileDescription, setDerivedProfileDescription] = useState<string | null>(null);
   const sigCanvasRef = useRef<SignatureCanvas>(null);
 
   const riskCategories = [
@@ -85,29 +83,19 @@ const RiskProfileForm = ({
       preparedFor: Yup.string().required("The prepared for field is required"),
       identityNumber: Yup.string().required("Your identity number is required"),
       preparedBy: Yup.string().required("The prepared by field is required"),
-      preparedOn: Yup.date().required(
-        "The date field is required, click the calendar icon on the right to select the date"
-      ),
-      investmentTerm: Yup.string().required(
-        "Your desired investment term is required"
-      ),
+      preparedOn: Yup.date().required("The date field is required, click the calendar icon on the right to select the date"),
+      investmentTerm: Yup.string().required("Your desired investment term is required"),
       requiredRisk: Yup.string().required("Your required risk is required"),
       riskTolerance: Yup.string().required("Your risk tolerance is required"),
       riskCapacity: Yup.string().required("Your risk capacity is required"),
       agree: Yup.boolean().oneOf([true], "You must accept the terms"),
-      date: Yup.date().required(
-        "The date field is required, click the calendar icon to select the date"
-      ),
+      date: Yup.date().required("The date field is required, click the calendar icon to select the date"),
       signature: Yup.string().test(
         "signature",
         "Signature is required",
-        function (value) {
-          const { createError } = this;
+        function () {
           const isSignatureEmpty = sigCanvasRef.current?.isEmpty();
-          return (
-            !isSignatureEmpty ||
-            createError({ path: "signature", message: "Signature is required" })
-          );
+          return !isSignatureEmpty || this.createError({ message: "Signature is required" });
         }
       ),
     }),
@@ -216,11 +204,9 @@ const RiskProfileForm = ({
 
       <div className="text-center mb-4 text-gray-700">
         <p>
-          <p>
-            The purpose of this questionnaire is to help the Financial Adviser
-            and Client determine the client&#39;s investment risk profile to
-            guide them in the selection of suitable investment solutions.
-          </p>
+          The purpose of this questionnaire is to help the Financial Adviser and
+          Client determine the client's investment risk profile to guide
+          them in the selection of suitable investment solutions.
         </p>
       </div>
 
@@ -237,23 +223,16 @@ const RiskProfileForm = ({
             <input
               type={field.type}
               name={field.name}
-              value={
-                formik.values[field.name as FormFieldKey] as
-                  | string
-                  | number
-                  | undefined
-              } // Explicitly cast to string | number | undefined
+              value={formik.values[field.name as FormFieldKey] as string | number | readonly string[] | undefined} // Explicitly cast to string | number | readonly string[] | undefined
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               className={`p-2 rounded-md bg-gray-100 text-gray-800 ${
-                formik.touched[field.name as FormFieldKey] &&
-                formik.errors[field.name as FormFieldKey]
+                formik.touched[field.name as FormFieldKey] && formik.errors[field.name as FormFieldKey]
                   ? "border border-red-500"
                   : ""
               }`}
             />
-            {formik.touched[field.name as FormFieldKey] &&
-            formik.errors[field.name as FormFieldKey] ? (
+            {formik.touched[field.name as FormFieldKey] && formik.errors[field.name as FormFieldKey] ? (
               <div className="text-red-500 text-sm mt-1">
                 {formik.errors[field.name as FormFieldKey]}
               </div>
@@ -309,17 +288,11 @@ const RiskProfileForm = ({
             <span className="mb-1">{select.label}</span>
             <select
               name={select.name}
-              value={
-                formik.values[select.name as FormFieldKey] as
-                  | string
-                  | number
-                  | undefined
-              } // Explicitly cast to string | number | undefined
+              value={formik.values[select.name as FormFieldKey] as string | number | readonly string[] | undefined} // Explicitly cast to string | number | readonly string[] | undefined
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               className={`p-2 rounded-md bg-gray-100 text-gray-800 ${
-                formik.touched[select.name as FormFieldKey] &&
-                formik.errors[select.name as FormFieldKey]
+                formik.touched[select.name as FormFieldKey] && formik.errors[select.name as FormFieldKey]
                   ? "border border-red-500"
                   : ""
               }`}
@@ -330,8 +303,7 @@ const RiskProfileForm = ({
                 </option>
               ))}
             </select>
-            {formik.touched[select.name as FormFieldKey] &&
-            formik.errors[select.name as FormFieldKey] ? (
+            {formik.touched[select.name as FormFieldKey] && formik.errors[select.name as FormFieldKey] ? (
               <div className="text-red-500 text-sm mt-1">
                 {formik.errors[select.name as FormFieldKey]}
               </div>
@@ -375,6 +347,7 @@ const RiskProfileForm = ({
           ) : null}
         </div>
 
+        {/* Buttons */}
         <button
           type="submit"
           className="p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
