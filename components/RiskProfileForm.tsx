@@ -353,14 +353,23 @@ const RiskProfileForm = ({
         >
           Submit
         </button>
+        <button
+          type="button"
+          onClick={() => {
+            sigCanvasRef.current?.clear();
+            formik.resetForm();
+          }}
+          className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 mt-2"
+        >
+          Clear
+        </button>
       </div>
-
       {derivedProfileDescription && (
         <div className="mt-6 p-4 bg-gray-100 border border-gray-300 rounded-md">
           <h3 className="text-lg font-semibold text-gray-800 mb-2">
             Risk Profile Description
           </h3>
-          <p>{derivedProfileDescription}</p>
+          <p className="text-gray-800">{derivedProfileDescription}</p>
         </div>
       )}
     </form>
