@@ -1,0 +1,237 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Custom Colors and Theme */
+:root {
+  --foreground-light: 0, 0, 0;
+  --background-light-start: 255, 255, 255;
+  --background-light-end: 255, 159, 64; /* Orange gradient */
+  --primary-color: 255, 159, 64; /* Orange */
+  --secondary-color: 107, 114, 128; /* Tailwind gray-500 */
+  --form-background: #ffffff; /* White background for forms */
+  --form-border: #e5e7eb; /* Light gray border */
+  --form-shadow: rgba(0, 0, 0, 0.1); /* Light shadow for forms */
+  --form-text-color: #333333; /* Dark text color for form elements */
+  --form-label-color: #555555; /* Medium gray for labels */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-light: 255, 255, 255;
+    --background-light-start: 15, 23, 42; /* Tailwind gray-900 */
+    --background-light-end: 28, 35, 43; /* Tailwind gray-800 */
+    --primary-color: 255, 159, 64; /* Orange */
+    --secondary-color: 156, 163, 175; /* Tailwind gray-400 */
+  }
+}
+
+body {
+  color: rgb(var(--foreground-light));
+  background: linear-gradient(
+      to bottom,
+      rgb(var(--background-light-end)),
+      rgb(var(--background-light-start))
+    );
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif; /* Elegant font for headings */
+  font-weight: 600;
+}
+
+a {
+  color: rgb(var(--primary-color));
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+a:hover, a:focus {
+  color: rgb(var(--primary-color));
+  text-decoration: underline;
+  transform: scale(1.02);
+}
+
+button, input, textarea {
+  font-family: inherit;
+  border-radius: 0.375rem; /* Tailwind rounded-md */
+  border: 1px solid rgb(var(--secondary-color));
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+button:hover, button:focus {
+  background-color: rgba(var(--primary-color), 0.1);
+  border-color: rgb(var(--primary-color));
+}
+
+input:focus, textarea:focus {
+  border-color: rgb(var(--primary-color));
+  outline: none;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-gradient-custom {
+    background: linear-gradient(
+      to bottom right,
+      rgba(var(--primary-color), 0.1),
+      rgba(var(--primary-color), 0.3)
+    );
+  }
+
+  .shadow-custom {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .border-custom {
+    border-color: rgba(var(--secondary-color), 0.5);
+  }
+}
+
+.form-container {
+  background-color: var(--form-background);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+  color: var(--form-text-color);
+}
+
+.form-label {
+  color: var(--form-label-color);
+}
+
+.form-input {
+  padding: 0.5rem;
+  border: 1px solid var(--form-border);
+  border-radius: 4px;
+}
+
+.form-button {
+  background-color: rgb(var(--primary-color));
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-button:hover {
+  background-color: darken(rgb(var(--primary-color)), 10%);
+}
+
+nav a {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Progress Indicators */
+.progress-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: rgba(var(--secondary-color), 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-inner {
+  height: 100%;
+  background-color: rgb(var(--primary-color));
+  width: 0;
+  transition: width 0.3s ease;
+}
+
+/* Tooltips */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltip-text {
+  visibility: hidden;
+  width: 120px;
+  background-color: rgb(var(--secondary-color));
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; 
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.question-container {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1rem;
+  }
+
+  .form-button {
+    width: 100%;
+  }
+
+  .progress-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+/* Custom CSS for video background */
+.video-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.relative-content {
+  position: relative;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.relative-content h2,
+.relative-content p {
+  color: #ffffff;
+}
