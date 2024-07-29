@@ -20,35 +20,46 @@ type FormData = {
   date: string;
 };
 
-const RiskProfileForm = ({ onSubmit }: { onSubmit: (data: FormData) => void }) => {
-  const [derivedProfileDescription, setDerivedProfileDescription] = useState<string | null>(null);
+const RiskProfileForm = ({
+  onSubmit,
+}: {
+  onSubmit: (data: FormData) => void;
+}) => {
+  const [derivedProfileDescription, setDerivedProfileDescription] = useState<
+    string | null
+  >(null);
   const sigCanvasRef = useRef<SignatureCanvas>(null);
 
   const riskCategories = [
     {
       range: [1, 30],
       label: "Conservative",
-      description: "Conservative Investors want stability and are more concerned with protecting their current investments than increasing the real value of their investments. A Conservative Investor is generally seeking to preserve capital and as a trade-off is usually prepared to accept lower investment terms.",
+      description:
+        "Conservative Investors want stability and are more concerned with protecting their current investments than increasing the real value of their investments. A Conservative Investor is generally seeking to preserve capital and as a trade-off is usually prepared to accept lower investment terms.",
     },
     {
       range: [31, 44],
       label: "Moderately Conservative",
-      description: "Moderately Conservative Investors are those who want to protect their capital and achieve some real increase in the value of their investments. This Investor is usually seeking a diversified investment portfolio with exposure to a broad range of investment sectors.",
+      description:
+        "Moderately Conservative Investors are those who want to protect their capital and achieve some real increase in the value of their investments. This Investor is usually seeking a diversified investment portfolio with exposure to a broad range of investment sectors.",
     },
     {
       range: [45, 54],
       label: "Moderate",
-      description: "Moderate Investors are long-term Investors who want reasonable but relatively stable growth. Some fluctuations are tolerable, but Moderate Investors want less risk than that attributable to a fully equity based investment.",
+      description:
+        "Moderate Investors are long-term Investors who want reasonable but relatively stable growth. Some fluctuations are tolerable, but Moderate Investors want less risk than that attributable to a fully equity based investment.",
     },
     {
       range: [55, 70],
       label: "Moderately Aggressive",
-      description: "Moderately Aggressive Investors are long-term Investors who want real growth in their capital. A fair amount of risk is acceptable.",
+      description:
+        "Moderately Aggressive Investors are long-term Investors who want real growth in their capital. A fair amount of risk is acceptable.",
     },
     {
       range: [71, 80],
       label: "Aggressive",
-      description: "Aggressive Investors are long-term Investors who want high capital growth. Substantial year-to-year fluctuations in value are acceptable in exchange for a potentially high long-term return. An Aggressive Investor is comfortable accepting high volatility in their capital with the risk of short to medium-term periods of negative returns. They are willing to trade higher risk for greater long-term return and have a long investment objective. This investor is usually seeking a diversified portfolio with exposure to a broad range of investment sectors.",
+      description:
+        "Aggressive Investors are long-term Investors who want high capital growth. Substantial year-to-year fluctuations in value are acceptable in exchange for a potentially high long-term return. An Aggressive Investor is comfortable accepting high volatility in their capital with the risk of short to medium-term periods of negative returns. They are willing to trade higher risk for greater long-term return and have a long investment objective. This investor is usually seeking a diversified portfolio with exposure to a broad range of investment sectors.",
     },
   ];
 
@@ -72,18 +83,31 @@ const RiskProfileForm = ({ onSubmit }: { onSubmit: (data: FormData) => void }) =
       preparedFor: Yup.string().required("The prepared for field is required"),
       identityNumber: Yup.string().required("Your identity number is required"),
       preparedBy: Yup.string().required("The prepared by field is required"),
-      preparedOn: Yup.date().required("The date field is required, click the calendar icon on the right to select the date"),
-      investmentTerm: Yup.string().required("Your desired investment term is required"),
+      preparedOn: Yup.date().required(
+        "The date field is required, click the calendar icon on the right to select the date"
+      ),
+      investmentTerm: Yup.string().required(
+        "Your desired investment term is required"
+      ),
       requiredRisk: Yup.string().required("Your required risk is required"),
       riskTolerance: Yup.string().required("Your risk tolerance is required"),
       riskCapacity: Yup.string().required("Your risk capacity is required"),
       agree: Yup.boolean().oneOf([true], "You must accept the terms"),
-      date: Yup.date().required("The date field is required, click the calendar icon to select the date"),
-      signature: Yup.string().test("signature", "Signature is required", function (value) {
-        const { createError } = this;
-        const isSignatureEmpty = sigCanvasRef.current?.isEmpty();
-        return !isSignatureEmpty || createError({ path: "signature", message: "Signature is required" });
-      }),
+      date: Yup.date().required(
+        "The date field is required, click the calendar icon to select the date"
+      ),
+      signature: Yup.string().test(
+        "signature",
+        "Signature is required",
+        function (value) {
+          const { createError } = this;
+          const isSignatureEmpty = sigCanvasRef.current?.isEmpty();
+          return (
+            !isSignatureEmpty ||
+            createError({ path: "signature", message: "Signature is required" })
+          );
+        }
+      ),
     }),
     onSubmit: (values) => {
       const score = calculateTotalScore(values);
@@ -191,8 +215,8 @@ const RiskProfileForm = ({ onSubmit }: { onSubmit: (data: FormData) => void }) =
       <div className="text-center mb-4 text-gray-700">
         <p>
           The purpose of this questionnaire is to help the Financial Adviser and
-          Client determine the client's investment risk profile to guide them in
-          the selection of a suitable investment solution.
+          Client determine the client&#39;s investment risk profile to guide
+          them in the selection of a suitable investment solution.
         </p>
       </div>
 
@@ -296,8 +320,6 @@ const RiskProfileForm = ({ onSubmit }: { onSubmit: (data: FormData) => void }) =
             ) : null}
           </label>
         ))}
-
-      
 
         <label className="flex items-center text-gray-800 mb-2">
           <input
