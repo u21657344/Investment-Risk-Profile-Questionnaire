@@ -216,7 +216,7 @@ const RiskProfileForm = ({
       <div className="text-center mb-4 text-gray-700">
         <p>
           The purpose of this questionnaire is to help the Financial Adviser and
-          Client determine the client's investment risk profile to guide them in
+          Client determine the clients investment risk profile to guide them in
           the selection of suitable investment solutions.
         </p>
       </div>
